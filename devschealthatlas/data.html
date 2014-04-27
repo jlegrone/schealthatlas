@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="SC Health Atlas Data">
+<title>SC Health Atlas Data</title>
+
+<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="assets/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="assets/css/style.css" rel="stylesheet" type="text/css">
+<script src="assets/scripts/jquery-1.11.0.min.js"></script>
+<script src="assets/scripts/jquery-ui-1.10.3.min.js"></script>
+<script src="assets/scripts/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script src="assets/scripts/jquery.dataTables.min.js"></script>
+<script src="assets/locationdata/snap.js"></script>
+<script src="assets/locationdata/fqhc.js"></script>
+<script src="assets/locationdata/wic.js"></script>
+<script src="assets/locationdata/headstart.js"></script>
+<script src="assets/scripts/bootstrap.min.js"></script>
+<script src="assets/scripts/jsontocsv.js"></script>
+
+
+<style>
+
+/*@font-face { font-family: Bebas; src: url('font/BebasNeueRegular.otf'); }
+@font-face { font-family: BebasBold; src: url('font/BebasNeueBold.otf'); }
+@font-face { font-family: BebasThin; src: url('font/BebasNeueThin.otf'); }
+
+.bebas {font-family: 'Bebas';}
+.bebasBold {font-family: 'BebasBold';}
+.bebasThin {font-family: 'BebasThin';}*/
+
+div.container {
+        width: 100%;
+        margin: 20px 0;
+    }
+    
+input[type="search"] {
+	-webkit-appearance: searchfield;
+	box-sizing: border-box;
+	box-shadow:none;
+	-webkit-writing-mode: horizontal-tb;
+	margin: 0em;
+	font: -webkit-small-control;
+	color: initial;
+	letter-spacing: normal;
+	word-spacing: normal;
+	text-transform: none;
+	text-indent: 3px;
+	text-shadow: none;
+	display: inline-block;
+	text-align: start;
+	padding: 1px;
+	background-color: white;
+	border: 2px inset;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+	-webkit-rtl-ordering: logical;
+	-webkit-user-select: text;
+	cursor: auto;
+}
+
+#dataTable_filter {display:none;}
+
+.navbar-brand {font-size:45px;}
+.navbar-brand small{font-size:22px;}
+
+.navbar-default .dropdown-menu a {
+	color: black !important;
+}
+
+html, body {
+	height:auto;
+	width:100%;
+	margin: 0;
+	z-index: 0;
+	overflow:auto !important;
+}
+
+.placeImage {max-height:70px;margin:0 10px 0 0;display:inline;vertical-align:middle;}
+
+.page-header {
+	padding-bottom: 0;
+	margin: 40px 0 20px;
+	border-bottom: none;
+}
+</style>
+
+<script src="assets/scripts/ga.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default" role="navigation" style="top:0;position:fixed;z-index:100;width:100%;padding:10px 0;">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/data"><span class="bebasThin">SC</span> <span class="bebas">Health Atlas </span><small style="font-family:'Garamond','Bebas';font-size:30px;">data</small></a>
+    </div>
+    {% if signedIn %}
+        <ul class="nav navbar-nav navbar-right">
+          <!-- <li><a href="/account">My Account</a></li> -->
+          <li><a href="{{ loginUrl }}" class="btn btn-login">logout</a></li>
+        </ul>
+        {% else %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ loginUrl }}" class="btn btn-login">login</a></li>
+        </ul>
+    {% endif %}
+	<!--<ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="#snapSection">SNAP Data</a></li>
+            <li><a href="#fqhcSection">FQHC Data</a></li>
+          </ul>
+        </li>
+      </ul>-->
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+        	<label style="margin-right:10px;">Filter Data:</label>
+          <input type="text" id="tableSearch" class="form-control" placeholder="">
+        </div>
+      </div>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<br><br><br>
+
+<div class="container">
+
+<section class="page-header" style="margin-top:0" id="snapSection">
+  <h1><img class="img-circle placeImage" src="assets/images/places/snap.png" alt="snap">Supplemental Nutrition Assistance Program Locations <small>(SNAP)</small></h1>
+  <p>SNAP offers nutrition assistance to millions of eligible, low-income individuals and families and provides economic benefits to communities. SNAP is the largest program in the domestic hunger safety net. The Food and Nutrition Service works with State agencies, nutrition educators, and neighborhood and faith-based organizations to ensure that those eligible for nutrition assistance can make informed decisions about applying for the program and can access benefits. FNS also works with State partners and the retail community to improve program administration and ensure program integrity.</p>
+  <p>Data Source: <a href="http://www.fns.usda.gov/snap/about-snap-retailer-locator" target="_blank">US Department of Agriculture - Food and Nutrition Services</a></p>
+  <p>Last Updated: 2/3/2014</p>
+  <button type="button" class="btn btn-primary" onclick="initializeTable(snapLocations, $('#snapSection'));">View Data</button> 
+  <button type="button" class="btn btn-default" onclick="downloadData(snapLocations);">Download</button>
+  <br><br>
+</section>
+
+<section class="page-header" style="margin-top:0" id="wicSection">
+  <h1><img class="img-circle placeImage" src="assets/images/places/wic.png" alt="wic">Women, Infants, and Children Programs <small>(WIC)</small></h1>
+  <p>The Special Supplemental Nutrition Program for Women, Infants, and Children (WIC) provides Federal grants to States for supplemental foods, health care referrals, and nutrition education for low-income pregnant, breastfeeding, and non-breastfeeding postpartum women, and to infants and children up to age five who are found to be at nutritional risk.</p>
+  <p>Data Source: <a href="http://www.scdhec.gov/health/mch/wic/index.htm" target="_blank">SC Department of Health & Environmental Control - WIC Programs</a></p>
+  <p>Last Updated: 2/6/2014</p>
+  <button type="button" class="btn btn-primary" onclick="initializeTable(wicLocations, $('#wicSection'));">View Data</button> 
+  <button type="button" class="btn btn-default" onclick="downloadData(wicLocations);">Download</button>
+  <br><br>
+</section>
+
+<section class="page-header" style="margin-top:0" id="headstartSection">
+  <h1><img class="img-circle placeImage" src="assets/images/places/headstart.png" alt="headstart"> Head Start Locations<small></small></h1>
+  <p>Head Start is a federal program that promotes the school readiness of children ages birth to 5 from low-income families by enhancing their cognitive, social and emotional development.</p>
+  <p>Data Source: <a href="http://www.acf.hhs.gov/programs/ohs" target="_blank">U.S. Department of Health & Human Services - Office of Head Start</a></p>
+  <p>Last Updated: 2/6/2014</p>
+  <button type="button" class="btn btn-primary" onclick="initializeTable(headstartLocations, $('#headstartSection'));">View Data</button> 
+  <button type="button" class="btn btn-default" onclick="downloadData(headstartLocations);">Download</button>
+  <br><br>
+</section>
+
+<section class="page-header" style="margin-top:0" id="fqhcSection">
+  <h1><img class="img-circle placeImage" src="assets/images/places/fqhc.png" alt="fqhc">Federally Qualified Health Centers <small>(FQHCs)</small></h1>
+  <p>Federally qualified health centers (FQHCs) include all organizations receiving grants under Section 330 of the Public Health Service Act (PHS). FQHCs qualify for enhanced reimbursement from Medicare and Medicaid, as well as other benefits. FQHCs must serve an underserved area or population, offer a sliding fee scale, provide comprehensive services, have an ongoing quality assurance program, and have a governing board of directors.</p>
+  <p>Data Source: <a href="http://datawarehouse.hrsa.gov/Data/datadownload/hccDownload.aspx" target="_blank">US Department of Health and Human Services - Health Resources and Services Administration</a></p>
+  <p>Last Updated: 2/6/2014</p>
+  <button type="button" class="btn btn-primary" onclick="initializeTable(fqhcLocations, $('#fqhcSection'));">View Data</button> 
+  <button type="button" class="btn btn-default" onclick="downloadData(fqhcLocations);">Download</button>
+  <br><br>
+</section>
+
+<div style="display:none;">
+<div id="tableWrapper">
+  <table id="dataTable" class="display" cellspacing="0" width="100%">
+
+	
+    
+    <tbody></tbody>
+
+  </table>
+</div>
+</div>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom nav-footer" role="navigation">
+  <div class="container" style="margin:0;">
+    &copy 2014 SC Health Atlas <span class="pull-right"><a href="mailto:info@schealthatlas.org">info@schealthatlas.org</a></span>
+  </div>
+</nav>
+
+<script>
+	var myColumns = [
+        	{ "mDataProp": "SiteName" },
+        	{ "mDataProp": "Address" },
+        	{ "mDataProp": "City" },
+        	//{ "mDataProp": "County" },
+        	//{ "mDataProp": "Zip5" },
+        	{ "mDataProp": "Latitude" },
+        	{ "mDataProp": "Longitude" }
+    	];
+	//var table;
+// function initializeTable(data, parent){
+// 	table = $('#dataTable').dataTable({
+//     	"aaData": snapLocations,
+//     	"aoColumns": myColumns
+// 	});
+// 	$('#tableWrapper').hide();
+// 	var element = $('#tableWrapper').detach();
+// 	$(parent).append(element);
+// 	table.fnClearTable();
+// 	myColumns = [];
+// 	var headerData = "mDataProp";
+	
+// 	var dataObject = data[0];
+// 	var columnNames = Object.getOwnPropertyNames(dataObject);
+// 	console.log(columnNames);
+	
+// 	for (i in columnNames) myColumns.push({dataObject:columnNames[i]}); 	
+	
+// 	table.fnAddData(data);
+// 	$('#tableWrapper').fadeIn('slow');
+	
+// 	scrollTo('tableWrapper');
+// }
+var table = $('#dataTable').dataTable({
+      "aaData": snapLocations,
+      "aoColumns": [
+          { "mDataProp": "SiteName" },
+          { "mDataProp": "Address" },
+          { "mDataProp": "City" },
+          //{ "mDataProp": "County" },
+          //{ "mDataProp": "Zip5" },
+          { "mDataProp": "Latitude" },
+          { "mDataProp": "Longitude" }
+      ]
+  });
+function initializeTable(data, parent){
+  $('#tableWrapper').hide();
+  var element = $('#tableWrapper').detach();
+  $(parent).append(element);
+  table.fnClearTable();
+  table.fnAddData(data);
+  $('#tableWrapper').fadeIn('slow');
+  
+  scrollTo('tableWrapper');
+}
+
+//filter table contents based on search box input
+$('#tableSearch').on( 'input', function () {
+    table.api().search( this.value ).draw();
+} );
+
+//download JSON data as CSV file
+function downloadData(data){
+	var csv = JSON2CSV(data);
+    window.open("data:text/csv;charset=utf-8," + escape(csv))
+}
+
+//smooth scrolling
+$(function() {
+  $('a[href*=#]:not([href=#])').click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html,body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
+    }
+  });
+});
+
+function scrollTo(hash) {
+	$.scrollTo('#' + hash, 400, {offset:-90});
+}
+</script>
+
+</body></html>

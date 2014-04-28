@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="Health Infrastructure Map">
+<title>SC Health Atlas</title>
+<link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+<link href="assets/css/fontello.css" rel="stylesheet" type="text/css">
+<link href="assets/css/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css">
+<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="assets/css/style.css" rel="stylesheet" type="text/css">
+<script src="assets/scripts/ga.js"></script>
+</head>
+<body>
+
+<div id="shareModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="shareModalTitle" class="modal-title">Share Map</h3>
+      </div>
+      <div class="modal-body">
+        <h5>Copy and share this link:</h5>
+        
+        <div class="input-group">
+          <input id='urlLink' class='form-control' type='text' value='http://www.schealthatlas.org/' onclick='this.select()' style='width:100%;cursor:default;background-color:white;' readonly>
+          <span class="input-group-btn">
+            <a id="shareByMailLink" href="mailto:?subject=SC Health Atlas&body=http://www.schealthatlas.org/" class="btn btn-info" type="button" title="Email this link"><i class="icon-mail-1" style="font-size:120%;line-height:100%;"></i></a>
+          </span>
+        </div><!-- /input-group -->
+
+        <div class="hidden-smallDevice">
+        <br>
+        <h5 style="text-align:center;">Or scan this QR code:</h5>
+
+        <div id="shareQRCode"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Sidebar -->
+<div id="sidebarWrap">
+<div class="sidebar">
+	<div class="bebas sidebarHeader">
+		<span class="bebasThin">SC</span> Health Atlas
+	</div>
+
+	<!-- navigation tabs for use in sidebar -->
+	<ul class="nav nav-tabs" id="myTab">
+  		<li class="active"><a href="#filter" data-toggle="tab">Filter</a></li>
+  		<li class=""><a href="#search" data-toggle="tab">Search</a></li>
+  		<li class=""><a href="#directions" data-toggle="tab">Directions</a></li>
+  		<li class="" id="mapToggle"><a href="#mapTab" data-toggle="tab">Map</a></li>
+  		<li><a href="#settings" data-toggle="tab"><i class="icon-cog"></i></a></li>
+	</ul>
+	<!-- /navigation tabs -->
+
+  <!-- content for each navigation tab -->
+  <div class="tab-content">
+
+	<!-- Filter Tab -->
+	<div class="tab-pane fade in active" id="filter">
+		<div class="tabTitle center">
+			<button id="clearButton" class="btn btn-default disabled" onclick="clearMap();$(this).addClass('disabled');">Clear Map</button>
+			<button id="generateButton" class="btn btn-primary disabled" onclick="getMapSettings();initialize();changeMapDiv();switchToMapTab();">Update Map</button>
+		</div>
+		<div class="tabBody">
+			<div class="panel-group placePicker" id="accordion">
+  			
+  			{#<!-- <div class="panel panel-default">
+    			<div class="panel-heading">
+      				<h4 class="panel-title">
+        				<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          				Social Services <span class="badge pull-right social">5276</span>
+        				</a>
+      				</h4>
+    			</div>
+    			<div id="" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<ul class="filterList">
+  							<li><label class="scottishToggle disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="snap"> Supplemental Nutrition Assistance (SNAP)</label></li>
+                <li><label class="scottishToggle disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="wic"> Women Infants & Children (WIC)</label></li>
+                <li><label class="scottishToggle disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="headstart"> Head Start Locations</label></li>
+						</ul>
+					</div>
+    			</div>
+  			</div> -->
+  		<!-- 	<div class="panel panel-default">
+    			<div class="panel-heading">
+      				<h4 class="panel-title">
+        				<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          				Health & Social Services <span class="badge pull-right healthCare">177</span>
+        				</a>
+      				</h4>
+    			</div> -->
+    			<!-- <div id="" class="panel-collapse collapse in"> -->
+      			<!-- 	<div class="panel-body"> --> #}
+        				<ul class="filterList">
+  							<!-- <li><label class="scottishToggle disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="fqhc"> Community Health Centers</label></li> -->
+
+                <li><h4>Medical Services</h4></li>
+                <li class=""><label class="hospital disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="hospital"> Hospitals</label></li>
+                <li><label class="freemed disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="freemed"> Free Medical Clinics</label></li>
+                <li class=""><label class="schoolclinic disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="schoolclinic"> School-Based Clinics</label></li>
+                <li><label class="chealth disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="chealth"> Community Health Centers</label></li>
+
+                <hr>
+
+                <li><h4>Dental Services</h4></li>
+                <li class=""><label class="freedental disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="freedental"> Free Dental Clinics</label></li>
+                <li><label class="cdental disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="cdental"> Community Dental Clinics</label></li>
+
+                <hr>
+
+                <li><h4>State Agencies & Services</h4></li>
+                <li class=""><label class="publichealth disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="publichealth"> Public Health</label></li>
+                <li class=""><label class="mentalhealth disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="mentalhealth"> Mental Health</label></li>
+                <li class=""><label class="substanceabuse disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="substanceabuse"> Substance Abuse</label></li>
+                
+                {# no agencies exist that are not one of the above subtypes, so do not add this input back until there are more agencies added without subtypes. <!-- <li class=""><label class="scottishToggle disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="agency"> Other State Agencies</label></li> --> #}
+
+                <hr>
+
+                <li><h4>Social & Nutrition Services</h4></li>
+                <li class=""><label class="nonprofit disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="nonprofit"> Select Nonprofit Organizations</label></li>
+                <li><label class="snap disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="snap"> Supplemental Nutrition Assistance (SNAP)</label></li>
+                <li><label class="wic disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="wic"> Women Infants & Children (WIC)</label></li>
+                <li><label class="headstart disabled"><input class="placeTypeToggle" type="checkbox" name="checkbox" value="headstart"> Head Start Locations</label></li>
+
+                <hr>
+
+                <li><h4>Data Overlays</h4></li>
+                <li>
+                  <select id="layerSelector">
+                  <option value="0">None</option>
+                  <option value="healthaccess">No Health Care Access due to Cost</option>
+                  <option value="poverty">Percent Children in Poverty</option>
+                  <option value="obesity">Percent Obesity</option>
+                  <option value="uninsured">Percent Uninsured</option>
+                  <option value="unemployed">Percent Unemployed</option>
+                  <option value="teenbirth">Teen Birth Rate</option>
+                  <option value="foodaccess">Food Insecurity</option>
+                  <option value="recreation">Access to Recreational Facilities</option>
+                  </select>
+                </li>
+						</ul>
+{# note: disabled template because we no longer use this
+
+  			<!--<div class="panel panel-default">
+   				<div class="panel-heading">
+      				<h4 class="panel-title">
+        				<a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          				Urgent Care Centers <span class="badge pull-right">0</span>
+        				</a>
+      				</h4>
+    			</div>
+    			<div id="collapseThree" class="panel-collapse collapse">
+      				<div class="panel-body">
+        				<ul class="filterList">
+  							<li><label><input type="checkbox" name="checkbox" value="value"> Hospital</label></li>
+  							<li><label><input type="checkbox" name="checkbox" value="value"> Pharmacy</label></li>
+  							<li><label><input type="checkbox" name="checkbox" value="value"> Urgent Care Center</label></li>
+  							<li><label><input type="checkbox" name="checkbox" value="value"> Federally Qualified Health Center</label></li>
+  							<li><label><input type="checkbox" name="checkbox" value="value"> WIC Vendor</label></li>
+						</ul>
+      				</div>
+    			</div>
+  			</div>
+  			<hr>
+  			<div class="panel panel-default">
+   				<div class="panel-heading">
+      				<h4 class="panel-title">
+        				<a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+          				Filter by Eligibility<span class="badge pull-right"></span>
+        				</a>
+      				</h4>
+    			</div>
+    			<div id="collapseFour" class="panel-collapse collapse">
+      				<div class="panel-body">
+        				<ul class="filterList">
+  							<li><label><input type="checkbox" checked="true" name="checkbox" value="value"> Medicare</label></li>
+  							<li><label><input type="checkbox" checked="true" name="checkbox" value="value"> Medicaid</label></li>
+  							<li><label><input type="checkbox" checked="true" name="checkbox" value="value"> Federally Qualified Health Centers</label></li>
+  							<li><label><input type="checkbox" checked="true" name="checkbox" value="value"> Military & Veteran's Services</label></li>
+						</ul>
+      				</div>
+    			</div>
+  			</div>-->
+
+#}
+			</div><!-- /collapsing panels -->
+		</div>
+	</div>
+	
+	<!-- Search Tab -->
+	<div class="tab-pane fade" id="search">
+		<div class="searchArea center" style="line-height:0.7em;">
+			<div class="input-group">
+				<span class="input-group-btn"><button class="btn btn-default" style="padding-left:8px;padding-right:8px;" onclick="getLocation()" type="button" title="Get my location"><span class="icon-target-3"></span></button></span>
+    			<input type="text" id="searchBox" class="form-control" placeholder="Enter address or zip code" onkeydown="if (event.keyCode == 13){codeAddress(this.value);this.blur();};">
+    			<span class="input-group-btn">
+    				<button class="btn btn-primary" type="button" onclick="codeAddress(document.getElementById('searchBox').value)">Go</button>
+    			</span>
+			</div><!-- /input-group -->
+			<br><br>
+			Show results within: 
+			<input type="number" id="maxDistanceInput" value="20" min="0.5" max="100" step=".5"> Miles
+			<br><br><br>
+			Number of results to display: 
+			<select id="resultNumberSelector">
+  				<option value="10">10</option>
+  				<option value="25">25</option>
+  				<option value="50">50</option>
+  				<option value="All">All</option>
+			</select>
+		</div><!-- /searchArea -->
+		<div id="resultsArea"></div>  			
+		<p id="noResultsWarning" class="text-danger center"></p>
+	</div>
+	
+	<!-- Directions Tab -->
+	<div class="tab-pane fade" id="directions">
+		<div class="tabTitle">	
+    		<div class="form-horizontal">
+  				<div class="row">
+    				<label for="startPoint" class="col-sm-2 control-label">From:</label>
+    				<div class="col-sm-10">
+    				<div class="input-group" style="width:100%;">
+      					<input type="text" class="form-control pull-right" id="startPoint" placeholder="Enter a starting point">
+      					<span class="input-group-btn"><button class="btn btn-default" style="padding-left:8px;padding-right:8px;" onclick="getLocation();" type="button" title="Get my location"><span class="icon-target-3"></span></button></span>
+    				</div>
+    				</div>
+  				</div>
+  				<br>
+  				<div class="row">
+    				<label for="endPoint" class="col-sm-2 control-label">To:</label>
+    				<div class="col-sm-10">
+      					<input type="text" class="form-control pull-right" id="endPoint" placeholder="Enter a destination">
+    				</div>
+  				</div>
+  				<br>
+  				<div class="row">
+  					<label for="directionsTypeSelector" class="col-sm-4">Transportation:</label>
+  					<div class="col-sm-8">
+  						<select class="" id="directionsTypeSelector">
+  							<option value="DRIVING">Driving</option>
+  							<option value="WALKING">Walking</option>
+  							<option value="BICYCLING">Biking</option>
+  							<!-- <option value="TRANSIT">Public Transport</option> -->
+						</select>
+					</div>
+				</div>
+  				<br>
+  				<div class="row" role="toolbar">
+  					<div class="btn-group col-sm-6" id="directionsActions" style="visibility:hidden;">
+  						<button type="button" class="btn btn-default" onclick="print('directionslist');">Print</button>
+  						<button id="directionsShareButton" type="button" class="btn btn-default" onclick="share(directions,'Share Directions')">Share</button>
+  					</div>
+  					<div class="btn-group col-sm-6">
+  						<button type="button" class="btn btn-primary directionsButton" onclick="getRoute($('#startPoint').val(),$('#endPoint').val())">Get Directions</button>
+  					</div>
+				</div>
+			</div>		
+		</div><!-- /input-group -->
+		<div id="directionslist"></div>
+	</div>
+	
+	<!-- Map Tab (for small screens) -->
+	<div class="tab-pane fade" id="mapTab"></div>
+	
+	<!-- Settings Tab -->
+	<div class="tab-pane fade" id="settings">
+		<div class="tabTitle center"><h6><i class="icon-cog"></i> Map Options</h6></div>
+			<div class="tabBody">
+     			<h5>Change Map Type</h5>
+     			<div class="btn-group btn-group-justified">
+     				<div class="btn-group">
+     					<button class="btn btn-default" style="border-right:none;" onclick="map.setOptions({mapTypeId: google.maps.MapTypeId.ROADMAP, styles: flatStyle});maptype='custom';"><i class="icon-buffer"></i> Default</button>
+     				</div>
+     				<div class="btn-group">
+     					<button class="btn btn-default" style="border-right:none;" onclick="map.setOptions({mapTypeId: google.maps.MapTypeId.TERRAIN, styles: stockStyle});maptype='google';"><i class="icon-chart-area"></i> Terrain</button>
+     				</div>
+     				<div class="btn-group">
+     					<button class="btn btn-default" onclick="map.setOptions({mapTypeId: google.maps.MapTypeId.HYBRID, styles: stockStyle});maptype='customStyle';"><i class="icon-eye-2"></i> Satellite</button>
+     				</div>
+     			</div>
+     			<br>
+     			<label class="checkbox-inline" id="">
+  					<input type="checkbox" id="heatmapToggle" value=""> View Points as Heatmap
+				  </label>
+				  <br>
+				  <label class="checkbox-inline" id="">
+  					<input type="checkbox" id="clusterToggle" value=true checked="checked"> Cluster high concentrations of markers
+				  </label>
+     			     			
+     			<div class="panel panel-default aboutPanel">
+  					<div class="panel-heading">
+    					<h4 class="panel-title" onclick="map.setOptions({mapTypeId: 'OSM', styles: stockStyle});">About the SC Health Atlas</h4>
+  					</div>
+  					<div class="panel-body aboutText">
+    					SC Health Atlas is a source of health and social services data for South Carolina. The Atlas allows users to create and manipulate maps, find all services within a close proximity, get driving directions, and print or download our data. The purpose of the Atlas is to give South Carolinians the data and tools necessary to explore the availability of health and social services in their communities, and link people to the care they need.  We regularly add new information to the Atlas, so we encourage you to visit often and let us know how the tool could be improved. For more information or to give us feedback, please contact us at <a href="mailto:info@schealthatlas.org" alt="email link">info@schealthatlas.org</a>.
+              <br>
+              {% if signedIn %}
+              <a href="/account">My Account</a>
+              <a href="{{ loginUrl }}" class="btn btn-default">logout</a>
+              {% else %}
+              <a href="{{ loginUrl }}" class="btn btn-default">login</a>
+              {% endif %}
+  					</div>
+				</div>
+			</div><!-- /tabBody -->
+	</div>
+  </div><!-- /tab-content -->
+
+</div><!-- /Sidebar -->
+<div class="sidebarFooter center">
+	<!-- &copy; 2014 University of South Carolina -->
+  <span id="byline" style="cursor:pointer;" onclick="this.innerHTML='<a href=&quot;mailto:info@schealthatlas.org?Subject=SC Health Atlas&quot; target=&quot;_top&quot;>info@schealthatlas.org</a>'">&copy; 2014 SC Health Atlas</span>
+</div>
+</div>
+
+<!-- Google Map -->
+<div class="mapWrapper" id="google_map_wrapper">
+  <button id="streetviewClose" class="btn btn-default" onclick="closeStreetView();">Close Street View</button>
+	<div class="map-controls btn-group-vertical overMap hidden-smallDevice">
+		<button class="btn btn-default icon-plus-circle-1" style="border-bottom:none !important;" onclick="map.setZoom(map.zoom + 1);"></button>
+		<div class="rangeSliderDiv visible-desktop">
+			<div class="verticalRange" id="slider-vertical"></div>
+		</div>
+		<button class="btn btn-default icon-minus-circle-1" onclick="map.setZoom(map.zoom - 1);"></button>	
+	</div>
+
+  <button id="mapShareButton" class="btn btn-primary btn-sm shareButton hidden-smallDevice overMap" onclick="generateMapLink();share(mapURL,'Share This Map');" title="Share Map">
+    <i class="icon-link-1"></i>
+  </button>
+
+  <div class="overMap mapToolBar">
+
+      <div class="input-group searchOverlay">
+          <input type="text" id="mapSearchBox" class="form-control" placeholder="Search Map" onkeydown="if (event.keyCode == 13){codeAddress(this.value);this.blur();};" onclick="this.value = ''">
+          <span class="input-group-btn">
+            <button class="btn btn-primary searchButton" type="button" onclick="codeAddress(document.getElementById('mapSearchBox').value);document.getElementById('searchBox').value = document.getElementById('mapSearchBox').value;"><span class="glyphicon glyphicon-search"></span></button>
+          </span>
+      </div><!-- /input-group -->
+    
+  </div>
+
+	<div class="overMap" id="infoPane">
+		<button type="button" class="close" style="position:absolute;top:5px;left:10px;" onclick="$('#infoPane').css('bottom',-$('#infoPane').outerHeight()+'px');$('#infoPane').css('opacity','0');">&times;</button>
+		<div class="media" id="placeInfoContent">
+    		<img class="media-object pull-left" id="placeImage" src="assets/images/scblueslogo.png" alt="Place Image">
+  			<div class="media-body">
+    			<h3 class="media-heading" id="placeName">SC Health Atlas</h3>
+    			<span id="placeDescription"></span>
+  			</div>
+		</div>
+		<br>	
+		
+		<div class="btn-group btn-group-justified">
+     		<div class="btn-group">
+     			<button class="btn btn-default" style="border-right:none;" onclick="showDirections($('#startPoint').val(),newDestination);"><i class="icon-direction"></i> Directions</button>
+     		</div>
+     		<div class="btn-group hidden-smallDevice">
+     			<button id="streetviewbutton" class="btn btn-default" style="border-right:none;" onclick="displayStreetView();"><i class="icon-road"></i> Street View</button>
+     		</div>
+     		<div class="btn-group">
+     			<button class="btn btn-default" onclick="zoomtomarker();"><i class="icon-search"></i> Zoom In</button>
+     		</div>
+     	</div>
+		
+	</div><!-- /InfoPane -->
+  <img id="overlayLegend" class="visible-lg" alt="legend" src="">
+  <a href="http://www.bcbsscfoundation.org/" target="blank" class="visible-lg bluecross"><img class="bluecrosslogo" src="/assets/images/scblueslogo.png" alt="BlueCross BlueShield of SC Foundation" title="BlueCross BlueShield of SC Foundation"></a>
+	 <div id="google_map"></div>
+</div>
+
+<!-- hidden iframe for sending printable content -->
+<iframe style="display:none;" name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIcegcv4OBQriW7IdBmaZkFtW7BG3utfA&sensor=true&libraries=places,visualization"></script>
+<script src="assets/scripts/markerclusterer.min.js"></script>
+<script src="assets/locationdata/wic.js"></script>
+<script src="assets/locationdata/headstart.js"></script>
+<script src="assets/locationdata/agency.js"></script>
+<script src="assets/locationdata/snap.js"></script>
+<!-- Load jQuery from Google CDN, revert to local version if unavailable -->
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="assets/scripts/jquery-ui-1.10.3.min.js"></script>
+<script src="assets/scripts/bootstrap.min.js"></script>
+<script src="assets/scripts/qrcode.min.js"></script>
+<script src="assets/scripts/maprenderer.js"></script>
+<script src="assets/scripts/map.js"></script>
+
+</body></html>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description" content=""{{ pageDescription }}"">
-<title>{{ pageTitle }}</title>
+<title>SC Health Atlas | {{ pageTitle }}</title>
 
 <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="assets/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
@@ -24,7 +24,7 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand" href="/account"><span class="bebasThin">SC</span> <span class="bebas">Health Atlas </span><small style="font-family:'Garamond','Bebas';font-size:30px;">account</small></a>
+      <a class="navbar-brand" href="{{ pageLink }}"><span class="bebasThin">SC</span> <span class="bebas">Health Atlas </span><small style="font-family:'Garamond','Bebas';font-size:30px;">{{ pageTitle }}</small></a>
     </div>
     {% if signedIn %}
         <ul class="nav navbar-nav navbar-right">
@@ -47,10 +47,11 @@
       </ul>-->
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      
+      {% block nav %} {% endblock %}
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
 <br><br><br>
 
 <div class="container">

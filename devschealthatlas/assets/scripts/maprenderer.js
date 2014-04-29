@@ -154,7 +154,7 @@ var stockStyle = [
   var mapCenter = new google.maps.LatLng(33.70822692863357,-80.83962782031251);
   var mapZoom = 8;
   var mapTab = "filter";
-  var mapURL = "http://www.schealthatlas.org/";
+  var mapURL = "http://schealthatlas.org/";
 
   var urlParameters = location.search.replace('?', '').split('&').map(function(val){
     return val.split('=');
@@ -201,7 +201,7 @@ var stockStyle = [
   function generateMapLink() {
     getMapSettings();
     // Generate a link to share this view of the map
-    mapURL = "http://www.schealthatlas.org/";
+    mapURL = "http://schealthatlas.org/";
     mapURL = mapURL + "?center=" + mapCenter.lat() + "," + mapCenter.lng() + "&zoom=" + mapZoom + "&type=" + mapType;
     if (locationTypes.length > 0){
       var mapLocations = locationTypes.join(",");
@@ -255,7 +255,7 @@ var stockStyle = [
     legendImage.style.visibility="hidden";
   }
   else {
-    kmlOverlay.setUrl("http://devschealthatlas.appspot.com/assets/overlaydata/KMZ/" + kmlID + ".kmz");
+    kmlOverlay.setUrl("http://schealthatlas.org/assets/overlaydata/KMZ/" + kmlID + ".kmz");
     kmlOverlay.setMap(map);
     //show legend
     legendImage.src="assets/overlaydata/legends/" + kmlID + ".png";

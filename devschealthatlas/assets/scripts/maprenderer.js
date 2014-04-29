@@ -258,8 +258,10 @@ var stockStyle = [
     kmlOverlay.setUrl("http://schealthatlas.org/assets/overlaydata/KMZ/" + kmlID + ".kmz");
     kmlOverlay.setMap(map);
     //show legend
-    legendImage.src="assets/overlaydata/legends/" + kmlID + ".png";
-    legendImage.style.visibility="visible";
+    if (kmlID != "counties"){
+      legendImage.src="assets/overlaydata/legends/" + kmlID + ".png";
+      legendImage.style.visibility="visible";
+    };
   }
 }
 

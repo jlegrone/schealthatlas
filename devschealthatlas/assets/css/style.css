@@ -637,19 +637,19 @@ color: black;
   	border-radius:2px;
 }
 
-.hospital:before{background: rgb(85,135,171);}
-.freemed:before{background: rgb(97,147,80);}
-.schoolclinic:before{background: rgb(121,173,104);}
-.chealth:before{background: rgb(55,166,149);}
+.hospital:before{background: rgb(35,113,214);}
+.freemed:before{background: rgb(178,84,107);}
+.schoolclinic:before{background: rgb(59,196,193);}
+.chealth:before{background: rgb(192,112,209);}
 
-.freedental:before{background: rgba(212,81,144,0.8);}
-.cdental:before{background: rgba(212,81,144,0.8);}
+.freedental:before{background: rgb(241,81,166);}
+.cdental:before{background: rgb(178,188,9);}
 
-.publichealth:before{background: rgba(141,85,198,0.7);}
+.publichealth:before{background: rgb(40,99,131);}
 .mentalhealth:before{background: rgb(122,134,143);}
-.substanceabuse:before{background: rgb(68,160,158);}
+.substanceabuse:before{background: rgb(108,175,85);}
 
-.nonprofit:before{background: rgb(186,120,96);}
+.nonprofit:before{background: rgb(160,87,57);}
 .snap:before{background: rgb(219,88,88);}
 .wic:before{background: rgb(159,154,221);}
 .headstart:before{background: rgb(246,169,100);}

@@ -255,7 +255,7 @@ var stockStyle = [
     legendImage.style.visibility="hidden";
   }
   else {
-    kmlOverlay.setUrl("http://www.schealthatlas.org/assets/overlaydata/KMZ/" + kmlID + ".kmz");
+    kmlOverlay.setUrl("http://devschealthatlas.appspot.com/assets/overlaydata/KMZ/" + kmlID + ".kmz");
     kmlOverlay.setMap(map);
     //show legend
     legendImage.src="assets/overlaydata/legends/" + kmlID + ".png";

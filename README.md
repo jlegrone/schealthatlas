@@ -5,4 +5,4 @@ SC Health Atlas is a source of health and social services data for South Carolin
 
 For more information or to give us feedback, please contact us at info@schealthatlas.org. 
 
-This project can be viewed live at http://www.schealthatlas.org.
+This project can be viewed live at http://schealthatlas.org.

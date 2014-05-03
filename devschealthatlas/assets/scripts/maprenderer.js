@@ -31,6 +31,10 @@ var directionsService = new google.maps.DirectionsService();
 var directionsDisplay;
 var travelMode;
 var maptype = "custom";
+var sepiaStyle = [{"featureType":"water","stylers":[{"visibility":"on"},{"color":"#acbcc9"}]},{"featureType":"landscape","stylers":[{"color":"#f2e5d4"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#c5c6c6"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#e4d7c6"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#fbfaf7"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#c5dac6"}]},{"featureType":"administrative","stylers":[{"visibility":"on"},{"lightness":33}]},{"featureType":"road"},{"featureType":"poi.park","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":20}]},{},{featureType: "poi", "elementType": "labels.text", stylers: [{visibility: "off"}]},{featureType: "poi", "elementType": "labels.icon", stylers: [{visibility: "off"}]},{"featureType":"road","stylers":[{"lightness":20}]}];
+var grayStyle = [{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{featureType: "poi", "elementType": "labels.text", stylers: [{visibility: "off"}]},{featureType: "poi", "elementType": "labels.icon", stylers: [{visibility: "off"}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}];
+var subtleStyle = [{"featureType":"poi","stylers":[{"visibility":"off"}]},{"stylers":[{"saturation":-70},{"lightness":37},{"gamma":1.15}]},{"elementType":"labels","stylers":[{"gamma":0.26},{"visibility":"off"}]},{"featureType":"road","stylers":[{"lightness":0},{"saturation":0},{"hue":"#ffffff"},{"gamma":0}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"lightness":50},{"saturation":0},{"hue":"#ffffff"}]},{"featureType":"administrative.province","stylers":[{"visibility":"on"},{"lightness":-50}]},{"featureType":"administrative.province","elementType":"labels.text.stroke","stylers":[{"visibility":"off"}]},{"featureType":"administrative.province","elementType":"labels.text","stylers":[{"lightness":20}]}];
+var darkStyle = [{"stylers":[{"hue":"#ff1a00"},{"invert_lightness":true},{"saturation":-100},{"lightness":33},{"gamma":0.5}]},{featureType: "poi", "elementType": "labels.text", stylers: [{visibility: "off"}]},{featureType: "poi", "elementType": "labels.icon", stylers: [{visibility: "off"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#2D333C"}]}];
 var stockStyle = [
 {stylers: [{ visibility: 'simplified' }]},
 {
@@ -41,6 +45,8 @@ var stockStyle = [
   }, {
     "color": "#7fc8ed"
   }]},
+
+  {featureType: "poi", "elementType": "labels.text", stylers: [{visibility: "off"}]},{featureType: "poi", "elementType": "labels.icon", stylers: [{visibility: "off"}]},
 
   {
     "featureType": "administrative.locality",
@@ -149,8 +155,8 @@ var stockStyle = [
   }];
 
   var locationTypes = [];
-  var mapStyle = flatStyle;
-  var mapType = "roadmap";
+  var mapStyle;
+  var mapType = "default";
   var mapCenter = new google.maps.LatLng(33.70822692863357,-80.83962782031251);
   var mapZoom = 8;
   var mapTab = "filter";
@@ -170,7 +176,9 @@ var stockStyle = [
       if (parameterName == 'type'){
         mapType = parameterValue;
         if (mapType == 'terrain' || mapType == 'hybrid'){mapStyle = stockStyle;}
-        else{mapStyle = flatStyle};
+        else{
+          mapStyle = flatStyle;
+        };
       };
       if (parameterName == 'zoom'){mapZoom = Number(parameterValue);};
       if (parameterName == 'center'){
@@ -232,9 +240,6 @@ var stockStyle = [
    directionsDisplay.setPanel(document.getElementById("directionslist"));
    geocoder = new google.maps.Geocoder();
 
-
-
-
    toggleKML();
 
    google.maps.event.addListener(kmlOverlay, 'click', function(kmlEvent) {
@@ -265,12 +270,42 @@ var stockStyle = [
   }
 }
 
+map.mapTypes.set("default", new google.maps.StyledMapType(flatStyle, {name: "Default"}));
+
+map.mapTypes.set("google", new google.maps.StyledMapType(stockStyle, {name: "Google Map"}));
+
+map.mapTypes.set("greyscale", new google.maps.StyledMapType(grayStyle, {name: "Greyscale"}));
+
+map.mapTypes.set("sepia", new google.maps.StyledMapType(sepiaStyle, {name: "Sepia"}));
+
+map.mapTypes.set("light", new google.maps.StyledMapType(subtleStyle, {name: "Light Map"}));
+
+map.mapTypes.set("dark", new google.maps.StyledMapType(darkStyle, {name: "Dark Map"}));
+
 map.mapTypes.set("OSM", new google.maps.ImageMapType({
   getTileUrl: function(coord, zoom) {
     return "http://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
   },
   tileSize: new google.maps.Size(256, 256),
   name: "OpenStreetMap",
+  maxZoom: 19
+}));
+
+map.mapTypes.set("mapquest", new google.maps.ImageMapType({
+  getTileUrl: function(coord, zoom) {
+    return "http://otile1.mqcdn.com/tiles/1.0.0/map/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+  },
+  tileSize: new google.maps.Size(256, 256),
+  name: "MapQuest OSM",
+  maxZoom: 19
+}));
+
+map.mapTypes.set("mapquestaerial", new google.maps.ImageMapType({
+  getTileUrl: function(coord, zoom) {
+    return "http://otile1.mqcdn.com/tiles/1.0.0/sat/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+  },
+  tileSize: new google.maps.Size(256, 256),
+  name: "MapQuest Aerial",
   maxZoom: 18
 }));
 
@@ -371,7 +406,7 @@ function addMarkers() {
       if (displayHeatmap != undefined && displayHeatmap.checked){var mapdiv = null;}
       else{var mapdiv = map};
 
-      var markerIcon = 'assets/images/' + iconType + '.png';
+      var markerIcon = 'assets/images/markers/' + iconType + '.png';
 
       var marker = new google.maps.Marker({'map': mapdiv, 'position': latLng, 'icon': markerIcon, 'origIcon': markerIcon, 'title':placemark.SiteName, 'addressLineOne':placemark.Address, 'addressLineTwo':placemark.City + ' ' + placemark.State, 'coordinates':coordinates, 'type':placemarkSubType});
       
@@ -555,7 +590,7 @@ google.maps.event.addListener(contextMenu, 'menu_item_selected', function(latLng
     break;
     case 'share_view':
     generateMapLink();
-    share(mapURL);
+    share(mapURL,'Share This Map');
     $('#urlLink').val(mapURL);
     break;
     case 'center_map_click':

@@ -1,0 +1,19 @@
+{
+  "name": "schealthatlas",
+  "version": "0.0.0",
+  "description": "SC Health Atlas is a source of health and social services data for South Carolina.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jlegrone/schealthatlas.git"
+  },
+  "author": "Jacob LeGrone",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlegrone/schealthatlas/issues"
+  },
+  "homepage": "https://github.com/jlegrone/schealthatlas"
+}

@@ -672,8 +672,8 @@ color: black;
 	background-color:rgba(255,255,255,0.9);
 	border:1px solid rgb(200,200,200);
 	border-radius:2px;
-	box-shadow:0px 5px 10px rgba(0,0,0,0.25);
-	z-index: 500 !important;
+/*	box-shadow:0px 5px 10px rgba(0,0,0,0.25);
+*/	z-index: 500 !important;
 }
 .context_menu_item{
 	font-size: 13px !important;
@@ -683,25 +683,8 @@ color: black;
 	font-family: "Lucida Grande", Arial, sans-serif !important;
 }
 .context_menu_item:hover{
-	background-color:blue;
+	background-color:rgb(62,118,194);
 	color:white;
-		/* IE10 Consumer Preview */ 
-background-image: -ms-linear-gradient(top, rgb(81,112,246), rgb(20,54,231));
-
-/* Mozilla Firefox */ 
-background-image: -moz-linear-gradient(top, rgb(81,112,246), rgb(20,54,231));
-
-/* Opera */ 
-background-image: -o-linear-gradient(top, rgb(81,112,246), rgb(20,54,231));
-
-/* Webkit (Safari/Chrome 10)
-background-image: -webkit-gradient(linear, top, bottom, color-stop(0, #FFFFFF), color-stop(1, #00A3EF)); */ 
-
-/* Webkit (Chrome 11+) */ 
-background-image: -webkit-linear-gradient(top, rgb(81,112,246), rgb(20,54,231));
-
-/* W3C Markup, IE10 Release Preview */ 
-background-image: linear-gradient(to bottom, rgb(81,112,246), rgb(20,54,231));
 }
 .context_menu_separator{
 	background-color:rgb(200,200,200);

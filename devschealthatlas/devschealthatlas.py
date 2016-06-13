@@ -28,7 +28,8 @@ class User(db.Model):
 
 class CommonHandler(webapp2.RequestHandler):
     def setupUser(self):
-        self.user = users.get_current_user()
+        # self.user = users.get_current_user()
+        self.user = False # setting this to false to disable the users module for now -- was causing 500 error on production
         self.templateValues = {}
         if self.user:
             self.templateValues['signedIn'] = True
@@ -42,8 +43,8 @@ class CommonHandler(webapp2.RequestHandler):
                 self.account = model.Account(user = self.user)
                 self.account.put()
         else:
-            loginURL = users.create_login_url('/account')
-            self.templateValues['loginUrl'] = loginURL
+            # loginURL = users.create_login_url('/account')
+            self.templateValues['loginUrl'] = 'http://schealthatlas.org'
 
     def render(self,htmlFile):
         template = JINJA_ENVIRONMENT.get_template(htmlFile)
@@ -71,8 +72,9 @@ class AccountPage(CommonHandler):
             self.templateValues['UserAccount'] = self.account
             self.render('account.html')
         else:
-            loginURL = users.create_login_url('/account')
-            self.redirect(str(loginURL))
+            # loginURL = users.create_login_url('/account')
+            # self.redirect(str(loginURL))
+            self.redirect('/')
 
 class LoginHandler(CommonHandler):
 
